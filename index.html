@@ -1,219 +1,378 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AutoRacing Hub</title>
   <style>
-    body { margin:0; font-family:'Segoe UI',sans-serif; background:#000; color:#fff; }
-    header { background:#e10600; padding:20px; text-align:center; font-size:28px; font-weight:bold; }
-    nav { display:flex; justify-content:center; background:#111; padding:12px; flex-wrap:wrap; }
-    nav a { color:#fff; margin:8px 20px; text-decoration:none; font-weight:bold; }
-    .container { padding:20px; max-width:1100px; margin:0 auto; }
-    h2 { margin-top:32px; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; background:#0f0f0f; }
-    th, td { padding:10px; border-bottom:1px solid #222; text-align:left; }
-    th { color:#e10600; }
-    .leader { color:gold; font-weight:bold; }
-    .news-item { background:#111; padding:15px; margin:10px 0; border-radius:10px; }
-    .news-item a { color:#e10600; text-decoration:none; font-weight:bold; }
-    .news-item p { margin:8px 0 0; color:#bbb; font-size:14px; }
-    .error { color:#ff4444; margin-top:10px; }
-    .status { color:#bbb; font-size:14px; margin-top:8px; }
-    .social-3d-wrap { display:flex; justify-content:center; margin:50px 0 30px; }
-    .social-3d { display:flex; margin:0; padding:0; }
-    .social-3d li { list-style:none; margin:0 28px; }
-    .social-3d li a { position:relative; display:block; width:70px; height:80px; background:#cecaca; text-align:center; padding-left:20px; transform:rotate(318deg) skew(199deg) translate(0,0); transition:.5s; box-shadow:-20px 20px 10px rgba(0,0,0,.5); }
-    .social-3d li a::before { content:''; position:absolute; top:10px; left:-20px; height:100%; width:20px; background:#8a6f6f; transform:rotate(0deg) skewY(-45deg); }
-    .social-3d li a::after { content:''; position:absolute; bottom:-20px; left:-10px; height:20px; width:100%; background:#8a6f6f; transform:rotate(0deg) skewX(-45deg); }
-    .social-3d li a i { font-size:40px; color:#262626; line-height:80px; transition:.5s; padding-right:14px; }
-    .social-3d li a:hover { transform:skew(5deg) translate(20px,-50px); box-shadow:-50px 50px 50px rgba(0,0,0,.5); }
-    .social-3d li:hover i { color:#fff; }
-    .social-3d li.facebook:hover a { background:#3b5998; }
-    .social-3d li.facebook:hover a::before { background:#365492; }
-    .social-3d li.facebook:hover a::after { background:#4a69ad; }
-    .social-3d li.twitter:hover a { background:#00aced; }
-    .social-3d li.twitter:hover a::before { background:#097aa5; }
-    .social-3d li.twitter:hover a::after { background:#53b9e0; }
-    .social-3d li.instagram:hover a { background:#e4405f; }
-    .social-3d li.instagram:hover a::before { background:#d81c3f; }
-    .social-3d li.instagram:hover a::after { background:#e46880; }
-    footer { text-align:center; padding:20px; color:#999; border-top:1px solid #222; margin-top:30px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #090909, #111827);
+      color: #fff;
+    }
+    header {
+      background: linear-gradient(90deg, #ff4d1f, #ff7a1a);
+      padding: 22px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      background: rgba(20, 20, 20, 0.9);
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
+    }
+    h2 {
+      margin-top: 34px;
+      margin-bottom: 14px;
+      font-size: 2rem;
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+    }
+    th {
+      color: #ff8f3d;
+      font-size: 0.95rem;
+    }
+    .leader {
+      color: #ffd166;
+      font-weight: 700;
+    }
+    .status {
+      color: #cfcfcf;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+    .error {
+      color: #ff9a76;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+    .news-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .news-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .news-item a {
+      color: #ff8f3d;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+    .news-item p {
+      margin: 8px 0 0;
+      color: #d0d0d0;
+      font-size: 0.92rem;
+    }
+    .social-3d-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 50px 0 24px;
+    }
+    .social-3d {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      gap: 26px;
+    }
+    .social-3d li {
+      list-style: none;
+    }
+    .social-3d li a {
+      position: relative;
+      display: block;
+      width: 70px;
+      height: 80px;
+      background: #d7d3cf;
+      text-align: center;
+      padding-left: 20px;
+      transform: rotate(318deg) skew(199deg) translate(0, 0);
+      transition: .5s;
+      box-shadow: -20px 20px 10px rgba(0, 0, 0, .5);
+    }
+    .social-3d li a::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: -20px;
+      height: 100%;
+      width: 20px;
+      background: #8a6f6f;
+      transform: rotate(0deg) skewY(-45deg);
+    }
+    .social-3d li a::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: -10px;
+      height: 20px;
+      width: 100%;
+      background: #8a6f6f;
+      transform: rotate(0deg) skewX(-45deg);
+    }
+    .social-3d li a i {
+      font-size: 40px;
+      color: #262626;
+      line-height: 80px;
+      transition: .5s;
+      padding-right: 14px;
+    }
+    .social-3d li a:hover {
+      transform: skew(5deg) translate(20px, -50px);
+      box-shadow: -50px 50px 50px rgba(0, 0, 0, .5);
+    }
+    .social-3d li:hover i { color: #fff; }
+    .social-3d li.facebook:hover a { background: #3b5998; }
+    .social-3d li.facebook:hover a::before { background: #365492; }
+    .social-3d li.facebook:hover a::after { background: #4a69ad; }
+    .social-3d li.twitter:hover a { background: #00aced; }
+    .social-3d li.twitter:hover a::before { background: #097aa5; }
+    .social-3d li.twitter:hover a::after { background: #53b9e0; }
+    .social-3d li.instagram:hover a { background: #e4405f; }
+    .social-3d li.instagram:hover a::before { background: #d81c3f; }
+    .social-3d li.instagram:hover a::after { background: #e46880; }
+    footer {
+      text-align: center;
+      padding: 22px;
+      color: #b5b5b5;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 24px;
+    }
+    @media (max-width: 700px) {
+      header { font-size: 1.5rem; }
+      h2 { font-size: 1.6rem; }
+      .social-3d { gap: 12px; }
+      .social-3d li a { width: 58px; height: 68px; }
+      .social-3d li a i { font-size: 32px; line-height: 68px; }
+    }
   </style>
 </head>
 <body>
+  <header>🏎️ AutoRacing Hub</header>
 
-<header>🏎️ AutoRacing Hub</header>
+  <nav>
+    <a href="#f1">F1</a>
+    <a href="#news">Știri Auto</a>
+    <a href="#social">Social</a>
+  </nav>
 
-<nav>
-  <a href="#top">Acasă</a>
-  <a href="#f1">F1</a>
-  <a href="#news">Știri Auto</a>
-  <a href="#social">Social</a>
-</nav>
+  <div class="container">
+    <section id="f1" class="card">
+      <h2>🏁 Formula 1</h2>
+      <table id="f1Table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pilot</th>
+            <th>Puncte</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="f1Error" class="error"></div>
+      <div class="status">Clasamentul se reîncarcă automat la 30 secunde.</div>
+    </section>
 
-<div class="container">
-  <h2 id="f1">🏁 Formula 1</h2>
-  <table id="f1Table">
-    <thead><tr><th>#</th><th>Pilot</th><th>Puncte</th></tr></thead>
-    <tbody></tbody>
-  </table>
-  <div id="f1Error" class="error"></div>
-  <div class="status">Clasamentul se reîncarcă automat la 30 secunde.</div>
+    <section id="news" class="card" style="margin-top:22px;">
+      <h2>📰 Știri Auto</h2>
+      <div id="newsContainer" class="news-list"></div>
+      <div id="newsError" class="error"></div>
+      <div class="status">Știrile se reîncarcă automat la 60 secunde.</div>
+    </section>
+  </div>
 
-  <h2 id="news">📰 Știri Auto</h2>
-  <div id="newsContainer"></div>
-  <div id="newsError" class="error"></div>
-  <div class="status">Știrile se reîncarcă automat la 60 secunde.</div>
-</div>
+  <div class="social-3d-wrap" id="social">
+    <ul class="social-3d">
+      <li class="facebook">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      </li>
+      <li class="twitter">
+        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+      </li>
+      <li class="instagram">
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      </li>
+    </ul>
+  </div>
 
-<div class="social-3d-wrap" id="social">
-  <ul class="social-3d">
-    <li class="facebook">
-      <a href="#" aria-label="Facebook">
-        <i class="fab fa-facebook-f"></i>
-      </a>
-    </li>
-    <li class="twitter">
-      <a href="#" aria-label="Twitter">
-        <i class="fab fa-x-twitter"></i>
-      </a>
-    </li>
-    <li class="instagram">
-      <a href="#" aria-label="Instagram">
-        <i class="fab fa-instagram"></i>
-      </a>
-    </li>
-  </ul>
-</div>
+  <footer>© 2026 AutoRacing Hub</footer>
 
-<footer>© 2026 AutoRacing Hub</footer>
+  <script src="https://kit.fontawesome.com/dd8c49730d.js" crossorigin="anonymous"></script>
+  <script>
+    const CACHE_F1 = 'f1_cache';
+    const CACHE_NEWS = 'news_cache';
 
-<script src="https://kit.fontawesome.com/dd8c49730d.js" crossorigin="anonymous"></script>
-<script>
-const CACHE_F1 = 'f1_cache';
-const CACHE_NEWS = 'news_cache';
+    const FALLBACK_F1 = [
+      { position: '1', Driver: { givenName: 'Max', familyName: 'Verstappen' }, points: '0' },
+      { position: '2', Driver: { givenName: 'Lando', familyName: 'Norris' }, points: '0' },
+      { position: '3', Driver: { givenName: 'Charles', familyName: 'Leclerc' }, points: '0' }
+    ];
 
-const FALLBACK_F1 = [
-  { position: '1', Driver: { givenName: 'Max', familyName: 'Verstappen' }, points: '0' },
-  { position: '2', Driver: { givenName: 'Lando', familyName: 'Norris' }, points: '0' },
-  { position: '3', Driver: { givenName: 'Charles', familyName: 'Leclerc' }, points: '0' }
-];
+    const FALLBACK_NEWS = [
+      {
+        title: 'Știrile live nu sunt disponibile momentan',
+        link: '#',
+        pubDate: 'Fallback local activ'
+      },
+      {
+        title: 'Pentru știri reale ai nevoie de backend-ul de știri din răspunsul meu',
+        link: '#',
+        pubDate: 'Backup local'
+      }
+    ];
 
-const FALLBACK_NEWS = [
-  {
-    title: 'Bine ai venit pe AutoRacing Hub',
-    link: '#',
-    pubDate: 'Fallback local activ'
-  },
-  {
-    title: 'Dacă feed-ul extern pică, site-ul va arăta aceste știri salvate',
-    link: '#',
-    pubDate: 'Backup local'
-  }
-];
+    const NEWS_BACKEND_URL = 'https://autoracing-news.onrender.com/news';
 
-async function safeFetch(url) {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch {
-    try {
-      const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-      const res = await fetch(proxy);
-      if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
-      return await res.json();
-    } catch {
-      return null;
+    async function safeFetch(url) {
+      try {
+        let res = await fetch(url);
+        if (!res.ok) throw new Error();
+        return await res.json();
+      } catch (e) {
+        try {
+          const proxy1 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+          let res = await fetch(proxy1);
+          if (!res.ok) throw new Error();
+          return await res.json();
+        } catch (e2) {
+          try {
+            const proxy2 = 'https://corsproxy.io/?' + encodeURIComponent(url);
+            let res = await fetch(proxy2);
+            if (!res.ok) throw new Error();
+            return await res.json();
+          } catch (e3) {
+            return null;
+          }
+        }
+      }
     }
-  }
-}
 
-async function loadF1(){
-  const tbody = document.querySelector('#f1Table tbody');
-  const errorBox = document.getElementById('f1Error');
-  errorBox.textContent = '';
-  tbody.innerHTML = '';
+    async function loadF1() {
+      const tbody = document.querySelector('#f1Table tbody');
+      const errorBox = document.getElementById('f1Error');
+      errorBox.textContent = '';
+      tbody.innerHTML = '';
 
-  const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverstandings/');
+      const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverstandings/');
 
-  if(data && data.MRData && data.MRData.StandingsTable.StandingsLists.length > 0){
-    const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-    localStorage.setItem(CACHE_F1, JSON.stringify(standings));
-    renderF1(standings);
-  } else {
-    const cache = localStorage.getItem(CACHE_F1);
-    if(cache){
-      errorBox.textContent = '⚠️ Nu am putut lua date live. Afișez ultimele date salvate.';
-      renderF1(JSON.parse(cache));
-    } else {
-      errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez fallback local.';
-      renderF1(FALLBACK_F1);
+      if (data && data.MRData && data.MRData.StandingsTable && data.MRData.StandingsTable.StandingsLists.length > 0) {
+        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+        localStorage.setItem(CACHE_F1, JSON.stringify(standings));
+        renderF1(standings);
+      } else {
+        const cache = localStorage.getItem(CACHE_F1);
+        if (cache) {
+          errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez ultimele date salvate.';
+          renderF1(JSON.parse(cache));
+        } else {
+          errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez fallback local.';
+          renderF1(FALLBACK_F1);
+        }
+      }
     }
-  }
-}
 
-function renderF1(standings){
-  const tbody = document.querySelector('#f1Table tbody');
-  tbody.innerHTML = '';
+    function renderF1(standings) {
+      const tbody = document.querySelector('#f1Table tbody');
+      tbody.innerHTML = '';
 
-  standings.forEach((d,i)=>{
-    const row = document.createElement('tr');
-    if(i===0) row.classList.add('leader');
+      standings.forEach((d, i) => {
+        const row = document.createElement('tr');
+        if (i === 0) row.classList.add('leader');
 
-    const name = d.Driver ? `${d.Driver.givenName} ${d.Driver.familyName}` : d.name;
-    const pts = d.points ?? d.pts ?? 0;
-    const pos = d.position ?? (i + 1);
+        const name = d.Driver ? `${d.Driver.givenName} ${d.Driver.familyName}` : d.name;
+        const pts = d.points ?? d.pts ?? 0;
+        const pos = d.position ?? (i + 1);
 
-    row.innerHTML = `<td>${pos}</td><td>${name}</td><td>${pts}</td>`;
-    tbody.appendChild(row);
-  });
-}
-
-async function loadNews(){
-  const container = document.getElementById('newsContainer');
-  const errorBox = document.getElementById('newsError');
-  errorBox.textContent = '';
-  container.innerHTML = '';
-
-  const data = await safeFetch('https://rssjson.vercel.app/api?url=' + encodeURIComponent('https://news.google.com/rss/search?q=masini+formula+1&hl=ro&gl=RO&ceid=RO:ro'));
-
-  if(data && Array.isArray(data.items)){
-    localStorage.setItem(CACHE_NEWS, JSON.stringify(data.items));
-    renderNews(data.items);
-  } else {
-    const cache = localStorage.getItem(CACHE_NEWS);
-    if(cache){
-      errorBox.textContent = '⚠️ Nu am putut lua știri live. Afișez ultimele știri salvate.';
-      renderNews(JSON.parse(cache));
-    } else {
-      errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez fallback local.';
-      renderNews(FALLBACK_NEWS);
+        row.innerHTML = `<td>${pos}</td><td>${name}</td><td>${pts}</td>`;
+        tbody.appendChild(row);
+      });
     }
-  }
-}
 
-function renderNews(items){
-  const container = document.getElementById('newsContainer');
-  container.innerHTML = '';
+    async function loadNews() {
+      const container = document.getElementById('newsContainer');
+      const errorBox = document.getElementById('newsError');
+      errorBox.textContent = '';
+      container.innerHTML = '';
 
-  items.slice(0,5).forEach(item=>{
-    const div = document.createElement('div');
-    div.className = 'news-item';
-    div.innerHTML = `
-      <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
-      <p>${item.pubDate || ''}</p>
-    `;
-    container.appendChild(div);
-  });
-}
+      const data = await safeFetch(NEWS_BACKEND_URL);
 
-loadF1();
-loadNews();
-setInterval(loadF1, 30000);
-setInterval(loadNews, 60000);
-</script>
+      if (data && Array.isArray(data.items) && data.items.length) {
+        localStorage.setItem(CACHE_NEWS, JSON.stringify(data.items));
+        renderNews(data.items);
+      } else {
+        const cache = localStorage.getItem(CACHE_NEWS);
+        if (cache) {
+          errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez ultimele știri salvate.';
+          renderNews(JSON.parse(cache));
+        } else {
+          errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez fallback local.';
+          renderNews(FALLBACK_NEWS);
+        }
+      }
+    }
 
+    function renderNews(items) {
+      const container = document.getElementById('newsContainer');
+      container.innerHTML = '';
+
+      items.slice(0, 5).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'news-item';
+        div.innerHTML = `
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
+          <p>${item.pubDate || item.source || ''}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    loadF1();
+    loadNews();
+    setInterval(loadF1, 30000);
+    setInterval(loadNews, 60000);
+  </script>
 </body>
 </html>
