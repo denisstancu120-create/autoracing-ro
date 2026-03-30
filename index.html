@@ -96,20 +96,86 @@ const CACHE_NEWS = 'news_cache';
 
 async function safeFetch(url) {
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+     // încerc direct
+    let res = await fetch(url);
+    if (!res.ok) throw new Error();
+
     return await res.json();
-  } catch {
+
+  } catch (e) {
     try {
-      const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-      const res = await fetch(proxy);
-      if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
+      // fallback proxy 1
+      const proxy1 = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+      let res = await fetch(proxy1);
+      if (!res.ok) throw new Error();
+
       return await res.json();
-    } catch {
-      return null;
+
+    } catch (e2) {
+      try {
+        // fallback proxy 2 (IMPORTANT)
+        const proxy2 = "https://corsproxy.io/?" + encodeURIComponent(url);
+        let res = await fetch(proxy2);
+        if (!res.ok) throw new Error();
+
+        return await res.json();
+
+      } catch (e3) {
+        return null;
+      }
     }
   }
 }
+🔧 Pasul 3
+
+👉 apasă Commit changes
+
+🔄 Pasul 4
+
+Pe site:
+👉 apasă:
+
+Ctrl + F5
+
+(foarte important)
+
+💥 Ce se întâmplă acum
+
+Site-ul tău:
+
+încearcă API normal
+dacă nu merge → folosește proxy 1
+dacă nu merge → proxy 2
+
+👉 deci aproape sigur o să funcționeze
+
+🧠 De ce era problema
+
+GitHub Pages = static site
+👉 nu ai backend
+👉 API-urile blochează uneori request-urile
+
+Noi am „păcălit” problema cu proxy-uri 😎
+
+🏁 După fix
+
+Ar trebui să vezi:
+
+✅ clasament F1
+✅ știri auto
+✅ site complet funcțional
+
+🔥 Dacă vrei next level
+
+Pot să-ți fac:
+
+API mai stabil (100% real)
+design ca site oficial F1
+animații
+live race tracker 🏎️
+
+👉 După ce dai commit și refresh:
+scrie „merge” sau trimite poză 🔥
 
 async function loadF1(){
   const tbody = document.querySelector('#f1Table tbody');
