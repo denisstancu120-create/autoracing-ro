@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoRacing Hub LIVE</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body { margin:0; font-family:'Segoe UI',sans-serif; background:#000; color:#fff; }
+    header { background:#e10600; padding:20px; text-align:center; font-size:28px; font-weight:bold; }
+    nav { display:flex; justify-content:center; background:#111; padding:12px; }
+    nav a { color:#fff; margin:0 20px; text-decoration:none; font-weight:bold; }
+    .container { padding:20px; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th, td { padding:10px; border-bottom:1px solid #222; }
+    th { color:#e10600; }
+    .leader { color:gold; font-weight:bold; }
+    .news { margin-top:40px; }
+    .news-item { background:#111; padding:15px; margin:10px 0; border-radius:10px; }
+    .news-item a { color:#e10600; text-decoration:none; font-weight:bold; }
+  </style>
+</head>
+<body>
+
+<header>🏎️ AutoRacing Hub LIVE</header>
+
+<nav>
+  <a href="#">Acasă</a>
+  <a href="#f1">F1</a>
+  <a href="#wrc">WRC</a>
+  <a href="#news">Știri RO</a>
+</nav>
+
+<div class="container">
+
+  <h2>🏁 Formula 1 LIVE</h2>
+  <table id="f1Table"><thead><tr><th>#</th><th>Pilot</th><th>Puncte</th></tr></thead><tbody></tbody></table>
+
+  <h2 id="wrc">🌍 WRC LIVE (simulat API)</h2>
+  <table id="wrcTable"><thead><tr><th>#</th><th>Pilot</th><th>Puncte</th></tr></thead><tbody></tbody></table>
+
+  <div class="news" id="news">
+    <h2>📰 Știri Auto în Română</h2>
+    <div id="newsContainer"></div>
+  </div>
+
+</div>
+
+<script>
+// F1 LIVE
+async function loadF1() {
+  const res = await fetch('https://ergast.com/api/f1/current/driverStandings.json');
+  const data = await res.json();
+  const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+  const tbody = document.querySelector('#f1Table tbody');
+  tbody.innerHTML = '';
+
+  standings.forEach((d,i)=>{
+    const row=document.createElement('tr');
+    if(i===0) row.classList.add('leader');
+    row.innerHTML=`<td>${d.position}</td><td>${d.Driver.givenName} ${d.Driver.familyName}</td><td>${d.points}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+// WRC (placeholder realist până găsim API stabil)
+const wrcData=[
+  {name:"Elfyn Evans",pts:66},
+  {name:"Oliver Solberg",pts:58},
+  {name:"Takamoto Katsuta",pts:55},
+  {name:"Adrien Fourmaux",pts:47},
+  {name:"Thierry Neuville",pts:21}
+];
+
+function loadWRC(){
+  const tbody=document.querySelector('#wrcTable tbody');
+  tbody.innerHTML='';
+  wrcData.forEach((d,i)=>{
+    const row=document.createElement('tr');
+    if(i===0) row.classList.add('leader');
+    row.innerHTML=`<td>${i+1}</td><td>${d.name}</td><td>${d.pts}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+// NEWS RO (filtrat)
+let lastTitles=[];
+async function loadNews(){
+  const res=await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=masini+auto+formula+1&hl=ro&gl=RO&ceid=RO:ro');
+  const data=await res.json();
+
+  const container=document.getElementById('newsContainer');
+  container.innerHTML='';
+
+  data.items.slice(0,5).forEach(item=>{
+    const div=document.createElement('div');
+    div.classList.add('news-item');
+
+    if(!lastTitles.includes(item.title)){
+      showNotification(item.title);
+    }
+
+    div.innerHTML=`<a href="${item.link}" target="_blank">${item.title}</a><p>${item.pubDate}</p>`;
+    container.appendChild(div);
+  });
+
+  lastTitles=data.items.map(i=>i.title);
+}
+
+// NOTIFICĂRI
+function showNotification(text){
+  if(Notification.permission==='granted'){
+    new Notification('📰 Știre nouă!',{ body:text });
+  }
+}
+
+function requestNotif(){
+  if(Notification.permission!=='granted'){
+    Notification.requestPermission();
+  }
+}
+
+// INIT
+requestNotif();
+loadF1();
+loadWRC();
+loadNews();
+
+setInterval(loadF1,30000);
+setInterval(loadNews,60000);
+</script>
+
+</body>
+</html>
