@@ -134,7 +134,7 @@ async function loadF1(){
   errorBox.textContent = '';
   tbody.innerHTML = '';
 
-  const data = await safeFetch('https://ergast.com/api/f1/current/driverStandings.json');
+  const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
 
   if(data && data.MRData && data.MRData.StandingsTable.StandingsLists.length > 0){
     const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
