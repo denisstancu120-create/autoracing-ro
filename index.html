@@ -94,39 +94,41 @@
 const CACHE_F1 = 'f1_cache';
 const CACHE_NEWS = 'news_cache';
 
+const FALLBACK_F1 = [
+  { position: '1', Driver: { givenName: 'Max', familyName: 'Verstappen' }, points: '0' },
+  { position: '2', Driver: { givenName: 'Lando', familyName: 'Norris' }, points: '0' },
+  { position: '3', Driver: { givenName: 'Charles', familyName: 'Leclerc' }, points: '0' }
+];
+
+const FALLBACK_NEWS = [
+  {
+    title: 'Bine ai venit pe AutoRacing Hub',
+    link: '#',
+    pubDate: 'Fallback local activ'
+  },
+  {
+    title: 'Dacă feed-ul extern pică, site-ul va arăta aceste știri salvate',
+    link: '#',
+    pubDate: 'Backup local'
+  }
+];
+
 async function safeFetch(url) {
   try {
-     // încerc direct
-    let res = await fetch(url);
-    if (!res.ok) throw new Error();
-
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
-
-  } catch (e) {
+  } catch {
     try {
-      // fallback proxy 1
-      const proxy1 = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-      let res = await fetch(proxy1);
-      if (!res.ok) throw new Error();
-
+      const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+      const res = await fetch(proxy);
+      if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
       return await res.json();
-
-    } catch (e2) {
-      try {
-        // fallback proxy 2 (IMPORTANT)
-        const proxy2 = "https://corsproxy.io/?" + encodeURIComponent(url);
-        let res = await fetch(proxy2);
-        if (!res.ok) throw new Error();
-
-        return await res.json();
-
-      } catch (e3) {
-        return null;
-      }
+    } catch {
+      return null;
     }
   }
 }
-
 
 async function loadF1(){
   const tbody = document.querySelector('#f1Table tbody');
@@ -134,7 +136,7 @@ async function loadF1(){
   errorBox.textContent = '';
   tbody.innerHTML = '';
 
-  const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverStandings.json');
+  const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverstandings/');
 
   if(data && data.MRData && data.MRData.StandingsTable.StandingsLists.length > 0){
     const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
@@ -146,7 +148,8 @@ async function loadF1(){
       errorBox.textContent = '⚠️ Nu am putut lua date live. Afișez ultimele date salvate.';
       renderF1(JSON.parse(cache));
     } else {
-      errorBox.textContent = '⚠️ Nu am putut încărca clasamentul F1.';
+      errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez fallback local.';
+      renderF1(FALLBACK_F1);
     }
   }
 }
@@ -174,7 +177,7 @@ async function loadNews(){
   errorBox.textContent = '';
   container.innerHTML = '';
 
-  const data = await safeFetch('https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=masini+formula+1&hl=ro&gl=RO&ceid=RO:ro');
+  const data = await safeFetch('https://rssjson.vercel.app/api?url=' + encodeURIComponent('https://news.google.com/rss/search?q=masini+formula+1&hl=ro&gl=RO&ceid=RO:ro'));
 
   if(data && Array.isArray(data.items)){
     localStorage.setItem(CACHE_NEWS, JSON.stringify(data.items));
@@ -185,7 +188,8 @@ async function loadNews(){
       errorBox.textContent = '⚠️ Nu am putut lua știri live. Afișez ultimele știri salvate.';
       renderNews(JSON.parse(cache));
     } else {
-      errorBox.textContent = '⚠️ Nu am putut încărca știrile.';
+      errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez fallback local.';
+      renderNews(FALLBACK_NEWS);
     }
   }
 }
