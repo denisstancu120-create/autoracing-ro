@@ -6,61 +6,167 @@
   <title>AutoRacing Hub</title>
   <style>
     * { box-sizing: border-box; }
+    :root {
+      --bg-1: #07090f;
+      --bg-2: #0f172a;
+      --card: rgba(255,255,255,0.05);
+      --card-border: rgba(255,255,255,0.08);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #ff6b2c;
+      --accent-2: #ff9d2f;
+      --gold: #ffd166;
+      --shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(180deg, #090909, #111827);
-      color: #fff;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,107,44,0.18), transparent 30%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
     }
-    header {
-      background: linear-gradient(90deg, #ff4d1f, #ff7a1a);
-      padding: 22px;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 800;
+    .hero {
+      padding: 26px 20px 36px;
+      background: linear-gradient(90deg, #ff4d1f, #ff7a1a 60%, #ff9d2f);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.14) 40%, transparent 70%);
+      transform: translateX(-100%);
+      animation: shine 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes shine {
+      to { transform: translateX(100%); }
+    }
+    .hero-inner {
+      max-width: 1150px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 900;
       letter-spacing: 0.5px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+    .hero p {
+      margin: 10px 0 0;
+      color: #fff8f2;
+      font-size: 1.05rem;
+      max-width: 700px;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .badge {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      backdrop-filter: blur(6px);
+    }
+    .hero-panel {
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+    .hero-panel p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #fff8f2;
     }
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
       display: flex;
       justify-content: center;
       gap: 28px;
       flex-wrap: wrap;
-      background: rgba(20, 20, 20, 0.9);
-      padding: 14px;
+      background: rgba(8, 11, 19, 0.88);
+      padding: 14px 16px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      backdrop-filter: blur(10px);
     }
     nav a {
-      color: #fff;
+      color: var(--text);
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 800;
+      letter-spacing: 0.2px;
     }
+    nav a:hover { color: var(--accent-2); }
     .container {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: 0 auto;
-      padding: 28px 18px 40px;
+      padding: 26px 18px 48px;
     }
-    h2 {
-      margin-top: 34px;
-      margin-bottom: 14px;
-      font-size: 2rem;
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      align-items: start;
     }
     .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .card + .card { margin-top: 22px; }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+    .status {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+    .error {
+      color: #ffb18f;
+      font-weight: 700;
+      margin-top: 10px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 8px;
+      border-radius: 14px;
       overflow: hidden;
-      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
     }
     th, td {
       padding: 12px 10px;
@@ -68,49 +174,93 @@
       text-align: left;
     }
     th {
-      color: #ff8f3d;
-      font-size: 0.95rem;
+      color: var(--accent-2);
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
+    tr:last-child td { border-bottom: none; }
     .leader {
-      color: #ffd166;
-      font-weight: 700;
+      color: var(--gold);
+      font-weight: 800;
     }
-    .status {
-      color: #cfcfcf;
-      font-size: 0.95rem;
-      margin-top: 10px;
-    }
-    .error {
-      color: #ff9a76;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-    .news-list {
+    .news-list, .events-list {
       display: grid;
       gap: 14px;
-      margin-top: 12px;
+      margin-top: 6px;
     }
-    .news-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
+    .news-item, .event-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
       padding: 16px;
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .news-item:hover, .event-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,157,47,0.35);
     }
     .news-item a {
-      color: #ff8f3d;
+      color: var(--accent-2);
       text-decoration: none;
       font-weight: 800;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
+      line-height: 1.35;
     }
-    .news-item p {
+    .news-item p, .event-meta, .event-desc {
       margin: 8px 0 0;
-      color: #d0d0d0;
-      font-size: 0.92rem;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+    .event-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+    .event-name {
+      margin: 0;
+      font-size: 1.04rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .event-tag {
+      flex-shrink: 0;
+      background: rgba(255,107,44,0.12);
+      color: var(--accent-2);
+      border: 1px solid rgba(255,107,44,0.26);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .mini-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .mini-box strong {
+      display: block;
+      font-size: 1.3rem;
+      color: var(--accent-2);
+      margin-bottom: 4px;
+    }
+    .mini-box span {
+      color: var(--muted);
+      font-size: 0.9rem;
     }
     .social-3d-wrap {
       display: flex;
       justify-content: center;
-      margin: 50px 0 24px;
+      margin: 48px 0 18px;
     }
     .social-3d {
       display: flex;
@@ -118,9 +268,7 @@
       padding: 0;
       gap: 26px;
     }
-    .social-3d li {
-      list-style: none;
-    }
+    .social-3d li { list-style: none; }
     .social-3d li a {
       position: relative;
       display: block;
@@ -176,52 +324,100 @@
     .social-3d li.instagram:hover a::after { background: #e46880; }
     footer {
       text-align: center;
-      padding: 22px;
+      padding: 24px;
       color: #b5b5b5;
       border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 24px;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px) {
+      .hero-inner, .section-grid { grid-template-columns: 1fr; }
+      .mini-stats { grid-template-columns: 1fr; }
     }
     @media (max-width: 700px) {
-      header { font-size: 1.5rem; }
-      h2 { font-size: 1.6rem; }
-      .social-3d { gap: 12px; }
+      .hero h1 { font-size: 1.8rem; }
+      nav { gap: 16px; }
+      h2 { font-size: 1.55rem; }
+      .social-3d { gap: 14px; }
       .social-3d li a { width: 58px; height: 68px; }
       .social-3d li a i { font-size: 32px; line-height: 68px; }
     }
   </style>
 </head>
 <body>
-  <header>🏎️ AutoRacing Hub</header>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>🏎️ AutoRacing Hub</h1>
+        <p>Știri auto reale, clasament Formula 1 live și evenimente auto selectate într-un singur loc. Un garaj digital cu benzină în vene și refresh automat. 🔥</p>
+        <div class="hero-badges">
+          <span class="badge">F1 live</span>
+          <span class="badge">Știri reale</span>
+          <span class="badge">Evenimente auto</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <h3>Start rapid</h3>
+        <p>Clasamentul F1 se reîncarcă la 30 secunde, iar știrile și evenimentele auto se actualizează automat. Site-ul are și fallback dacă un feed adoarme puțin.</p>
+      </div>
+    </div>
+  </section>
 
   <nav>
     <a href="#f1">F1</a>
     <a href="#news">Știri Auto</a>
+    <a href="#events">Evenimente</a>
     <a href="#social">Social</a>
   </nav>
 
   <div class="container">
-    <section id="f1" class="card">
-      <h2>🏁 Formula 1</h2>
-      <table id="f1Table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Pilot</th>
-            <th>Puncte</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div id="f1Error" class="error"></div>
-      <div class="status">Clasamentul se reîncarcă automat la 30 secunde.</div>
-    </section>
+    <div class="mini-stats">
+      <div class="mini-box">
+        <strong id="statsNews">0</strong>
+        <span>știri afișate</span>
+      </div>
+      <div class="mini-box">
+        <strong id="statsEvents">0</strong>
+        <span>evenimente auto</span>
+      </div>
+      <div class="mini-box">
+        <strong id="statsRefresh">30s</strong>
+        <span>refresh F1</span>
+      </div>
+    </div>
 
-    <section id="news" class="card" style="margin-top:22px;">
-      <h2>📰 Știri Auto</h2>
-      <div id="newsContainer" class="news-list"></div>
-      <div id="newsError" class="error"></div>
-      <div class="status">Știrile se reîncarcă automat la 60 secunde.</div>
-    </section>
+    <div class="section-grid" style="margin-top: 22px;">
+      <div>
+        <section id="f1" class="card">
+          <h2>🏁 Formula 1</h2>
+          <table id="f1Table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Pilot</th>
+                <th>Puncte</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="f1Error" class="error"></div>
+          <div class="status">Clasamentul se reîncarcă automat la 30 secunde.</div>
+        </section>
+
+        <section id="events" class="card" style="margin-top: 22px;">
+          <h2>📅 Evenimente Auto</h2>
+          <div id="eventsContainer" class="events-list"></div>
+          <div id="eventsError" class="error"></div>
+          <div class="status">Calendarul este actualizat automat din backend-ul de evenimente.</div>
+        </section>
+      </div>
+
+      <section id="news" class="card">
+        <h2>📰 Știri Auto</h2>
+        <div id="newsContainer" class="news-list"></div>
+        <div id="newsError" class="error"></div>
+        <div class="status">Știrile se reîncarcă automat la 60 secunde.</div>
+      </section>
+    </div>
   </div>
 
   <div class="social-3d-wrap" id="social">
@@ -244,6 +440,7 @@
   <script>
     const CACHE_F1 = 'f1_cache';
     const CACHE_NEWS = 'news_cache';
+    const CACHE_EVENTS = 'events_cache';
 
     const FALLBACK_F1 = [
       { position: '1', Driver: { givenName: 'Max', familyName: 'Verstappen' }, points: '0' },
@@ -258,36 +455,52 @@
         pubDate: 'Fallback local activ'
       },
       {
-        title: 'Pentru știri reale ai nevoie de backend-ul de știri din răspunsul meu',
+        title: 'Backend-ul de știri nu este pornit încă',
         link: '#',
         pubDate: 'Backup local'
       }
     ];
 
+    const FALLBACK_EVENTS = [
+      {
+        name: 'Auto Expo Weekend',
+        date: 'Data în curs de actualizare',
+        location: 'România',
+        type: 'Expo',
+        description: 'Calendarul real de evenimente va apărea imediat ce backend-ul de evenimente este conectat.'
+      },
+      {
+        name: 'Track Day România',
+        date: 'Data în curs de actualizare',
+        location: 'Circuit local',
+        type: 'Track Day',
+        description: 'Poți începe cu fallback și apoi trecem pe feed real de evenimente auto.'
+      }
+    ];
+
     const NEWS_BACKEND_URL = 'https://autoracing-ro.onrender.com/news';
+    const EVENTS_BACKEND_URL = 'https://autoracing-ro.onrender.com/events';
 
     async function safeFetch(url) {
       try {
-        let res = await fetch(url);
+        const res = await fetch(url);
         if (!res.ok) throw new Error();
         return await res.json();
       } catch (e) {
         try {
           const proxy1 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-          let res = await fetch(proxy1);
+          const res = await fetch(proxy1);
           if (!res.ok) throw new Error();
           return await res.json();
         } catch (e2) {
-          try {
-            const proxy2 = 'https://corsproxy.io/?' + encodeURIComponent(url);
-            let res = await fetch(proxy2);
-            if (!res.ok) throw new Error();
-            return await res.json();
-          } catch (e3) {
-            return null;
-          }
+          return null;
         }
       }
+    }
+
+    function updateStats(newsCount = 0, eventsCount = 0) {
+      document.getElementById('statsNews').textContent = String(newsCount);
+      document.getElementById('statsEvents').textContent = String(eventsCount);
     }
 
     async function loadF1() {
@@ -338,10 +551,11 @@
       container.innerHTML = '';
 
       const data = await safeFetch(NEWS_BACKEND_URL);
+      const items = data?.items || [];
 
-      if (data && Array.isArray(data.items) && data.items.length) {
-        localStorage.setItem(CACHE_NEWS, JSON.stringify(data.items));
-        renderNews(data.items);
+      if (items.length) {
+        localStorage.setItem(CACHE_NEWS, JSON.stringify(items));
+        renderNews(items);
       } else {
         const cache = localStorage.getItem(CACHE_NEWS);
         if (cache) {
@@ -367,12 +581,65 @@
         `;
         container.appendChild(div);
       });
+
+      const eventsCache = localStorage.getItem(CACHE_EVENTS);
+      const events = eventsCache ? JSON.parse(eventsCache) : FALLBACK_EVENTS;
+      updateStats(items.slice(0, 5).length, events.slice(0, 6).length);
+    }
+
+    async function loadEvents() {
+      const container = document.getElementById('eventsContainer');
+      const errorBox = document.getElementById('eventsError');
+      errorBox.textContent = '';
+      container.innerHTML = '';
+
+      const data = await safeFetch(EVENTS_BACKEND_URL);
+      const items = data?.items || [];
+
+      if (items.length) {
+        localStorage.setItem(CACHE_EVENTS, JSON.stringify(items));
+        renderEvents(items);
+      } else {
+        const cache = localStorage.getItem(CACHE_EVENTS);
+        if (cache) {
+          errorBox.textContent = '⚠️ Nu am putut lua evenimentele live. Afișez ultimele evenimente salvate.';
+          renderEvents(JSON.parse(cache));
+        } else {
+          errorBox.textContent = '⚠️ Nu am putut lua evenimentele live. Afișez fallback local.';
+          renderEvents(FALLBACK_EVENTS);
+        }
+      }
+    }
+
+    function renderEvents(items) {
+      const container = document.getElementById('eventsContainer');
+      container.innerHTML = '';
+
+      items.slice(0, 6).forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'event-item';
+        div.innerHTML = `
+          <div class="event-top">
+            <h3 class="event-name">${item.name}</h3>
+            <span class="event-tag">${item.type || 'Auto'}</span>
+          </div>
+          <p class="event-meta">📍 ${item.location || 'Locație necunoscută'} · 🗓️ ${item.date || 'Data necunoscută'}</p>
+          <p class="event-desc">${item.description || ''}</p>
+        `;
+        container.appendChild(div);
+      });
+
+      const newsCache = localStorage.getItem(CACHE_NEWS);
+      const news = newsCache ? JSON.parse(newsCache) : FALLBACK_NEWS;
+      updateStats(news.slice(0, 5).length, items.slice(0, 6).length);
     }
 
     loadF1();
     loadNews();
+    loadEvents();
     setInterval(loadF1, 30000);
     setInterval(loadNews, 60000);
+    setInterval(loadEvents, 120000);
   </script>
 </body>
 </html>
