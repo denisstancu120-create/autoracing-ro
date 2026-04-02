@@ -3,643 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoRacing Hub</title>
-  <style>
-    * { box-sizing: border-box; }
-    :root {
-      --bg-1: #07090f;
-      --bg-2: #0f172a;
-      --card: rgba(255,255,255,0.05);
-      --card-border: rgba(255,255,255,0.08);
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --accent: #ff6b2c;
-      --accent-2: #ff9d2f;
-      --gold: #ffd166;
-      --shadow: 0 18px 40px rgba(0,0,0,0.28);
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top, rgba(255,107,44,0.18), transparent 30%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-2));
-    }
-    .hero {
-      padding: 26px 20px 36px;
-      background: linear-gradient(90deg, #ff4d1f, #ff7a1a 60%, #ff9d2f);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.14) 40%, transparent 70%);
-      transform: translateX(-100%);
-      animation: shine 8s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes shine {
-      to { transform: translateX(100%); }
-    }
-    .hero-inner {
-      max-width: 1150px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: 24px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .hero h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-    }
-    .hero p {
-      margin: 10px 0 0;
-      color: #fff8f2;
-      font-size: 1.05rem;
-      max-width: 700px;
-    }
-    .hero-badges {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-    .badge {
-      background: rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.22);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      backdrop-filter: blur(6px);
-    }
-    .hero-panel {
-      background: rgba(0,0,0,0.18);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 22px;
-      padding: 18px;
-      backdrop-filter: blur(8px);
-    }
-    .hero-panel h3 {
-      margin: 0 0 8px;
-      font-size: 1.05rem;
-    }
-    .hero-panel p {
-      margin: 0;
-      font-size: 0.95rem;
-      color: #fff8f2;
-    }
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      flex-wrap: wrap;
-      background: rgba(8, 11, 19, 0.88);
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
-    }
-    nav a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-    }
-    nav a:hover { color: var(--accent-2); }
-    .container {
-      max-width: 1150px;
-      margin: 0 auto;
-      padding: 26px 18px 48px;
-    }
-    .section-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 22px;
-      align-items: start;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-    .card + .card { margin-top: 22px; }
-    h2 {
-      margin: 0 0 14px;
-      font-size: 1.9rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    h3 {
-      margin: 0 0 12px;
-      font-size: 1.2rem;
-    }
-    .status {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-top: 10px;
-    }
-    .error {
-      color: #ffb18f;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      border-radius: 14px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.02);
-    }
-    th, td {
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      text-align: left;
-    }
-    th {
-      color: var(--accent-2);
-      font-size: 0.92rem;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-    tr:last-child td { border-bottom: none; }
-    .leader {
-      color: var(--gold);
-      font-weight: 800;
-    }
-    .news-list, .events-list {
-      display: grid;
-      gap: 14px;
-      margin-top: 6px;
-    }
-    .news-item, .event-item {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 16px;
-      transition: transform .2s ease, border-color .2s ease;
-    }
-    .news-item:hover, .event-item:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,157,47,0.35);
-    }
-    .news-item a {
-      color: var(--accent-2);
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 1.02rem;
-      line-height: 1.35;
-    }
-    .news-item p, .event-meta, .event-desc {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.45;
-    }
-    .event-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: start;
-    }
-    .event-name {
-      margin: 0;
-      font-size: 1.04rem;
-      font-weight: 800;
-      color: #fff;
-    }
-    .event-tag {
-      flex-shrink: 0;
-      background: rgba(255,107,44,0.12);
-      color: var(--accent-2);
-      border: 1px solid rgba(255,107,44,0.26);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-    .mini-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
-    .mini-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 14px;
-    }
-    .mini-box strong {
-      display: block;
-      font-size: 1.3rem;
-      color: var(--accent-2);
-      margin-bottom: 4px;
-    }
-    .mini-box span {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .social-3d-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 48px 0 18px;
-    }
-    .social-3d {
-      display: flex;
-      margin: 0;
-      padding: 0;
-      gap: 26px;
-    }
-    .social-3d li { list-style: none; }
-    .social-3d li a {
-      position: relative;
-      display: block;
-      width: 70px;
-      height: 80px;
-      background: #d7d3cf;
-      text-align: center;
-      padding-left: 20px;
-      transform: rotate(318deg) skew(199deg) translate(0, 0);
-      transition: .5s;
-      box-shadow: -20px 20px 10px rgba(0, 0, 0, .5);
-    }
-    .social-3d li a::before {
-      content: '';
-      position: absolute;
-      top: 10px;
-      left: -20px;
-      height: 100%;
-      width: 20px;
-      background: #8a6f6f;
-      transform: rotate(0deg) skewY(-45deg);
-    }
-    .social-3d li a::after {
-      content: '';
-      position: absolute;
-      bottom: -20px;
-      left: -10px;
-      height: 20px;
-      width: 100%;
-      background: #8a6f6f;
-      transform: rotate(0deg) skewX(-45deg);
-    }
-    .social-3d li a i {
-      font-size: 40px;
-      color: #262626;
-      line-height: 80px;
-      transition: .5s;
-      padding-right: 14px;
-    }
-    .social-3d li a:hover {
-      transform: skew(5deg) translate(20px, -50px);
-      box-shadow: -50px 50px 50px rgba(0, 0, 0, .5);
-    }
-    .social-3d li:hover i { color: #fff; }
-    .social-3d li.facebook:hover a { background: #3b5998; }
-    .social-3d li.facebook:hover a::before { background: #365492; }
-    .social-3d li.facebook:hover a::after { background: #4a69ad; }
-    .social-3d li.twitter:hover a { background: #00aced; }
-    .social-3d li.twitter:hover a::before { background: #097aa5; }
-    .social-3d li.twitter:hover a::after { background: #53b9e0; }
-    .social-3d li.instagram:hover a { background: #e4405f; }
-    .social-3d li.instagram:hover a::before { background: #d81c3f; }
-    .social-3d li.instagram:hover a::after { background: #e46880; }
-    footer {
-      text-align: center;
-      padding: 24px;
-      color: #b5b5b5;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      margin-top: 10px;
-    }
-    @media (max-width: 900px) {
-      .hero-inner, .section-grid { grid-template-columns: 1fr; }
-      .mini-stats { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 700px) {
-      .hero h1 { font-size: 1.8rem; }
-      nav { gap: 16px; }
-      h2 { font-size: 1.55rem; }
-      .social-3d { gap: 14px; }
-      .social-3d li a { width: 58px; height: 68px; }
-      .social-3d li a i { font-size: 32px; line-height: 68px; }
-    }
-  </style>
+  <title>Auto Racing Events</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <section class="hero">
-    <div class="hero-inner">
-      <div>
-        <h1>🏎️ AutoRacing Hub</h1>
-        <p>Știri auto reale, clasament Formula 1 live și evenimente auto selectate într-un singur loc. Un garaj digital cu benzină în vene și refresh automat. 🔥</p>
-        <div class="hero-badges">
-          <span class="badge">F1 live</span>
-          <span class="badge">Știri reale</span>
-          <span class="badge">Evenimente auto</span>
+  <header class="hero">
+    <nav class="navbar">
+      <div class="logo">AUTO<span>RACING</span></div>
+      <ul class="nav-links">
+        <li><a href="#home">Acasă</a></li>
+        <li><a href="#next-event">Next Event</a></li>
+        <li><a href="#events">Evenimente</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <section id="home" class="hero-content">
+      <h1>Trăiește viteza. Urmărește evenimentele auto.</h1>
+      <p>Curse, drift, expoziții auto și adrenalină la maximum.</p>
+      <a href="#events" class="btn">Vezi evenimentele</a>
+    </section>
+  </header>
+
+  <main>
+    <section id="next-event" class="section next-event-section">
+      <h2>Următorul eveniment</h2>
+      <div id="nextEventCard" class="next-event-card">
+        <p>Se încarcă...</p>
+      </div>
+
+      <div class="countdown-box">
+        <h3>Countdown</h3>
+        <div id="countdown" class="countdown">
+          <div><span id="days">00</span><small>Zile</small></div>
+          <div><span id="hours">00</span><small>Ore</small></div>
+          <div><span id="minutes">00</span><small>Minute</small></div>
+          <div><span id="seconds">00</span><small>Secunde</small></div>
         </div>
       </div>
-      <div class="hero-panel">
-        <h3>Start rapid</h3>
-        <p>Clasamentul F1 se reîncarcă la 30 secunde, iar știrile și evenimentele auto se actualizează automat. Site-ul are și fallback dacă un feed adoarme puțin.</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <nav>
-    <a href="#f1">F1</a>
-    <a href="#news">Știri Auto</a>
-    <a href="#events">Evenimente</a>
-    <a href="#social">Social</a>
-  </nav>
+    <section id="events" class="section">
+      <h2>Evenimente Auto</h2>
 
-  <div class="container">
-    <div class="mini-stats">
-      <div class="mini-box">
-        <strong id="statsNews">0</strong>
-        <span>știri afișate</span>
-      </div>
-      <div class="mini-box">
-        <strong id="statsEvents">0</strong>
-        <span>evenimente auto</span>
-      </div>
-      <div class="mini-box">
-        <strong id="statsRefresh">30s</strong>
-        <span>refresh F1</span>
-      </div>
-    </div>
-
-    <div class="section-grid" style="margin-top: 22px;">
-      <div>
-        <section id="f1" class="card">
-          <h2>🏁 Formula 1</h2>
-          <table id="f1Table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Pilot</th>
-                <th>Puncte</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-          <div id="f1Error" class="error"></div>
-          <div class="status">Clasamentul se reîncarcă automat la 30 secunde.</div>
-        </section>
-
-        <section id="events" class="card" style="margin-top: 22px;">
-          <h2>📅 Evenimente Auto</h2>
-          <div id="eventsContainer" class="events-list"></div>
-          <div id="eventsError" class="error"></div>
-          <div class="status">Calendarul este actualizat automat din backend-ul de evenimente.</div>
-        </section>
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Caută eveniment..." />
+        <select id="cityFilter">
+          <option value="all">Toate orașele</option>
+        </select>
       </div>
 
-      <section id="news" class="card">
-        <h2>📰 Știri Auto</h2>
-        <div id="newsContainer" class="news-list"></div>
-        <div id="newsError" class="error"></div>
-        <div class="status">Știrile se reîncarcă automat la 60 secunde.</div>
-      </section>
-    </div>
-  </div>
+      <div id="eventsContainer" class="events-grid"></div>
+    </section>
 
-  <div class="social-3d-wrap" id="social">
-    <ul class="social-3d">
-      <li class="facebook">
-        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-      </li>
-      <li class="twitter">
-        <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-      </li>
-      <li class="instagram">
-        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      </li>
-    </ul>
-  </div>
+    <section id="gallery" class="section">
+      <h2>Galerie</h2>
+      <div class="gallery-grid">
+        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80" alt="Car 1">
+        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80" alt="Car 2">
+        <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80" alt="Car 3">
+        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=900&q=80" alt="Car 4">
+      </div>
+    </section>
 
-  <footer>© 2026 AutoRacing Hub</footer>
+    <section id="contact" class="section contact-section">
+      <h2>Contact</h2>
+      <form class="contact-form">
+        <input type="text" placeholder="Numele tău" required />
+        <input type="email" placeholder="Email" required />
+        <textarea placeholder="Mesajul tău" rows="5" required></textarea>
+        <button type="submit" class="btn">Trimite</button>
+      </form>
+    </section>
+  </main>
 
-  <script src="https://kit.fontawesome.com/dd8c49730d.js" crossorigin="anonymous"></script>
-  <script>
-    const CACHE_F1 = 'f1_cache';
-    const CACHE_NEWS = 'news_cache';
-    const CACHE_EVENTS = 'events_cache';
+  <footer class="footer">
+    <p>© 2026 AutoRacing. Toate drepturile rezervate.</p>
+  </footer>
 
-    const FALLBACK_F1 = [
-      { position: '1', Driver: { givenName: 'Max', familyName: 'Verstappen' }, points: '0' },
-      { position: '2', Driver: { givenName: 'Lando', familyName: 'Norris' }, points: '0' },
-      { position: '3', Driver: { givenName: 'Charles', familyName: 'Leclerc' }, points: '0' }
-    ];
-
-    const FALLBACK_NEWS = [
-      {
-        title: 'Știrile live nu sunt disponibile momentan',
-        link: '#',
-        pubDate: 'Fallback local activ'
-      },
-      {
-        title: 'Backend-ul de știri nu este pornit încă',
-        link: '#',
-        pubDate: 'Backup local'
-      }
-    ];
-
-    const FALLBACK_EVENTS = [
-      {
-        name: 'Auto Expo Weekend',
-        date: 'Data în curs de actualizare',
-        location: 'România',
-        type: 'Expo',
-        description: 'Calendarul real de evenimente va apărea imediat ce backend-ul de evenimente este conectat.'
-      },
-      {
-        name: 'Track Day România',
-        date: 'Data în curs de actualizare',
-        location: 'Circuit local',
-        type: 'Track Day',
-        description: 'Poți începe cu fallback și apoi trecem pe feed real de evenimente auto.'
-      }
-    ];
-
-    const NEWS_BACKEND_URL = 'https://autoracing-ro.onrender.com/news';
-    const EVENTS_BACKEND_URL = 'https://autoracing-ro.onrender.com/events';
-
-    async function safeFetch(url) {
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error();
-        return await res.json();
-      } catch (e) {
-        try {
-          const proxy1 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-          const res = await fetch(proxy1);
-          if (!res.ok) throw new Error();
-          return await res.json();
-        } catch (e2) {
-          return null;
-        }
-      }
-    }
-
-    function updateStats(newsCount = 0, eventsCount = 0) {
-      document.getElementById('statsNews').textContent = String(newsCount);
-      document.getElementById('statsEvents').textContent = String(eventsCount);
-    }
-
-    async function loadF1() {
-      const tbody = document.querySelector('#f1Table tbody');
-      const errorBox = document.getElementById('f1Error');
-      errorBox.textContent = '';
-      tbody.innerHTML = '';
-
-      const data = await safeFetch('https://api.jolpi.ca/ergast/f1/current/driverstandings/');
-
-      if (data && data.MRData && data.MRData.StandingsTable && data.MRData.StandingsTable.StandingsLists.length > 0) {
-        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-        localStorage.setItem(CACHE_F1, JSON.stringify(standings));
-        renderF1(standings);
-      } else {
-        const cache = localStorage.getItem(CACHE_F1);
-        if (cache) {
-          errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez ultimele date salvate.';
-          renderF1(JSON.parse(cache));
-        } else {
-          errorBox.textContent = '⚠️ Nu am putut lua datele live. Afișez fallback local.';
-          renderF1(FALLBACK_F1);
-        }
-      }
-    }
-
-    function renderF1(standings) {
-      const tbody = document.querySelector('#f1Table tbody');
-      tbody.innerHTML = '';
-
-      standings.forEach((d, i) => {
-        const row = document.createElement('tr');
-        if (i === 0) row.classList.add('leader');
-
-        const name = d.Driver ? `${d.Driver.givenName} ${d.Driver.familyName}` : d.name;
-        const pts = d.points ?? d.pts ?? 0;
-        const pos = d.position ?? (i + 1);
-
-        row.innerHTML = `<td>${pos}</td><td>${name}</td><td>${pts}</td>`;
-        tbody.appendChild(row);
-      });
-    }
-
-    async function loadNews() {
-      const container = document.getElementById('newsContainer');
-      const errorBox = document.getElementById('newsError');
-      errorBox.textContent = '';
-      container.innerHTML = '';
-
-      const data = await safeFetch(NEWS_BACKEND_URL);
-      const items = data?.items || [];
-
-      if (items.length) {
-        localStorage.setItem(CACHE_NEWS, JSON.stringify(items));
-        renderNews(items);
-      } else {
-        const cache = localStorage.getItem(CACHE_NEWS);
-        if (cache) {
-          errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez ultimele știri salvate.';
-          renderNews(JSON.parse(cache));
-        } else {
-          errorBox.textContent = '⚠️ Nu am putut lua știrile live. Afișez fallback local.';
-          renderNews(FALLBACK_NEWS);
-        }
-      }
-    }
-
-    function renderNews(items) {
-      const container = document.getElementById('newsContainer');
-      container.innerHTML = '';
-
-      items.slice(0, 5).forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'news-item';
-        div.innerHTML = `
-          <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
-          <p>${item.pubDate || item.source || ''}</p>
-        `;
-        container.appendChild(div);
-      });
-
-      const eventsCache = localStorage.getItem(CACHE_EVENTS);
-      const events = eventsCache ? JSON.parse(eventsCache) : FALLBACK_EVENTS;
-      updateStats(items.slice(0, 5).length, events.slice(0, 6).length);
-    }
-
-    async function loadEvents() {
-      const container = document.getElementById('eventsContainer');
-      const errorBox = document.getElementById('eventsError');
-      errorBox.textContent = '';
-      container.innerHTML = '';
-
-      const data = await safeFetch(EVENTS_BACKEND_URL);
-      const items = data?.items || [];
-
-      if (items.length) {
-        localStorage.setItem(CACHE_EVENTS, JSON.stringify(items));
-        renderEvents(items);
-      } else {
-        const cache = localStorage.getItem(CACHE_EVENTS);
-        if (cache) {
-          errorBox.textContent = '⚠️ Nu am putut lua evenimentele live. Afișez ultimele evenimente salvate.';
-          renderEvents(JSON.parse(cache));
-        } else {
-          errorBox.textContent = '⚠️ Nu am putut lua evenimentele live. Afișez fallback local.';
-          renderEvents(FALLBACK_EVENTS);
-        }
-      }
-    }
-
-    function renderEvents(items) {
-      const container = document.getElementById('eventsContainer');
-      container.innerHTML = '';
-
-      items.slice(0, 6).forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'event-item';
-        div.innerHTML = `
-          <div class="event-top">
-            <h3 class="event-name">${item.name}</h3>
-            <span class="event-tag">${item.type || 'Auto'}</span>
-          </div>
-          <p class="event-meta">📍 ${item.location || 'Locație necunoscută'} · 🗓️ ${item.date || 'Data necunoscută'}</p>
-          <p class="event-desc">${item.description || ''}</p>
-        `;
-        container.appendChild(div);
-      });
-
-      const newsCache = localStorage.getItem(CACHE_NEWS);
-      const news = newsCache ? JSON.parse(newsCache) : FALLBACK_NEWS;
-      updateStats(news.slice(0, 5).length, items.slice(0, 6).length);
-    }
-
-    loadF1();
-    loadNews();
-    loadEvents();
-    setInterval(loadF1, 30000);
-    setInterval(loadNews, 60000);
-    setInterval(loadEvents, 120000);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
