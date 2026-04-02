@@ -3,7 +3,7 @@ let countdownInterval = null;
 
 async function loadEvents() {
   try {
-    const response = await fetch("events.json");
+    const response = await fetch("./events.json");
     const events = await response.json();
 
     allEvents = events.sort((a, b) => new Date(a.date) - new Date(b.date));
