@@ -148,7 +148,6 @@ async function loadRealNews() {
     );
 
     const text = await response.text();
-
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "text/xml");
     const items = xml.querySelectorAll("item");
