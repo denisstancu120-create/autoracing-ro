@@ -4,25 +4,31 @@ let countdownInterval = null;
 async function loadEvents() {
   try {
     const response = await fetch("./events.json");
-    const events = await response.json();
+    const baseEvents = await response.json();
 
-    allEvents = events.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const savedEvents = JSON.parse(localStorage.getItem("customEvents")) || [];
+    allEvents = [...baseEvents, ...savedEvents].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
 
     populateCityFilter(allEvents);
     renderEvents(allEvents);
     renderNextEvent(allEvents);
     setupFilters();
+    loadNews();
   } catch (error) {
     console.error("Eroare la încărcarea evenimentelor:", error);
     document.getElementById("eventsContainer").innerHTML =
       '<p class="no-events">Nu s-au putut încărca evenimentele.</p>';
     document.getElementById("nextEventCard").innerHTML =
       "<p>Nu s-a putut încărca următorul eveniment.</p>";
+    loadNews();
   }
 }
 
 function populateCityFilter(events) {
   const cityFilter = document.getElementById("cityFilter");
+  cityFilter.innerHTML = `<option value="all">Toate orașele</option>`;
   const cities = [...new Set(events.map(event => event.city))];
 
   cities.forEach(city => {
@@ -42,9 +48,11 @@ function renderEvents(events) {
     return;
   }
 
-  events.forEach(event => {
+  events.forEach((event, index) => {
     const card = document.createElement("div");
     card.className = "event-card";
+
+    const eventId = event.id || `event-${index}`;
 
     card.innerHTML = `
       <img src="${event.image}" alt="${event.title}">
@@ -54,6 +62,7 @@ function renderEvents(events) {
         <p><strong>Oraș:</strong> ${event.city}</p>
         <p><strong>Locație:</strong> ${event.location}</p>
         <p>${event.description}</p>
+        <a class="btn" href="event.html?id=${encodeURIComponent(eventId)}">Vezi detalii</a>
       </div>
     `;
 
@@ -72,12 +81,15 @@ function renderNextEvent(events) {
     return;
   }
 
+  const eventId = nextEvent.id || "next-event";
+
   nextEventCard.innerHTML = `
     <h3>${nextEvent.title}</h3>
     <p><strong>Data:</strong> ${formatDate(nextEvent.date)}</p>
     <p><strong>Oraș:</strong> ${nextEvent.city}</p>
     <p><strong>Locație:</strong> ${nextEvent.location}</p>
     <p>${nextEvent.description}</p>
+    <a class="btn" href="event.html?id=${encodeURIComponent(eventId)}">Detalii eveniment</a>
   `;
 
   startCountdown(nextEvent.date);
@@ -156,69 +168,33 @@ function formatDate(dateString) {
     year: "numeric",
     month: "long",
     day: "numeric"
+  }) + " " + date.toLocaleTimeString("ro-RO", {
+    hour: "2-digit",
+    minute: "2-digit"
   });
 }
 
-loadEvents();
-
-document.querySelector(".contact-form").addEventListener("submit", function(e) {
-  e.preventDefault();
-  alert("Mesaj trimis cu succes! Vom reveni cât mai curând.");
-  this.reset();
-});
-async function loadNews() {
-  const newsContainer = document.getElementById("newsContainer");
-
-  try {
-    const response = await fetch(
-      "https://newsapi.org/v2/everything?q=formula%201 OR rally OR cars&language=en&sortBy=publishedAt&apiKey=YOUR_API_KEY"
-    );
-
-    const data = await response.json();
-
-    if (!data.articles || data.articles.length === 0) {
-      newsContainer.innerHTML = "<p>Nu sunt știri disponibile.</p>";
-      return;
-    }
-
-    newsContainer.innerHTML = "";
-
-    data.articles.slice(0, 6).forEach(article => {
-      const card = document.createElement("div");
-      card.className = "event-card";
-
-      card.innerHTML = `
-        <img src="${article.urlToImage || 'https://via.placeholder.com/400'}">
-        <div class="event-content">
-          <h3>${article.title}</h3>
-          <p>${article.description || ""}</p>
-          <a href="${article.url}" target="_blank" class="btn">Citește</a>
-        </div>
-      `;
-
-      newsContainer.appendChild(card);
-    });
-  } catch (error) {
-    console.error(error);
-    newsContainer.innerHTML = "<p>Eroare la încărcarea știrilor.</p>";
-  }
-}
-
-loadNews();
 function loadNews() {
   const newsContainer = document.getElementById("newsContainer");
+  if (!newsContainer) return;
 
   const fakeNews = [
     {
-      title: "Formula 1: Verstappen domină sezonul",
-      description: "Max Verstappen continuă să impresioneze în campionatul F1.",
-      image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c",
+      title: "Formula 1: duel intens în noul sezon",
+      description: "Se anunță un sezon spectaculos cu bătălii strânse în fruntea clasamentului.",
+      image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80",
       url: "#"
     },
     {
-      title: "Rally spectaculos în Finlanda",
-      description: "Etapă intensă de rally cu dueluri spectaculoase.",
-      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
+      title: "Rally european cu trasee spectaculoase",
+      description: "Competițiile de rally atrag tot mai mulți fani și echipe puternice.",
+      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80",
+      url: "#"
+    },
+    {
+      title: "Industria auto accelerează spre electrificare",
+      description: "Constructorii auto investesc masiv în platforme noi și tehnologii smart.",
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80",
       url: "#"
     }
   ];
@@ -228,18 +204,27 @@ function loadNews() {
   fakeNews.forEach(article => {
     const card = document.createElement("div");
     card.className = "event-card";
-
     card.innerHTML = `
-      <img src="${article.image}">
+      <img src="${article.image}" alt="${article.title}">
       <div class="event-content">
         <h3>${article.title}</h3>
         <p>${article.description}</p>
         <a href="${article.url}" class="btn">Citește</a>
       </div>
     `;
-
     newsContainer.appendChild(card);
   });
 }
 
-loadNews();
+document.addEventListener("DOMContentLoaded", () => {
+  const contactForm = document.querySelector(".contact-form");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Mesaj trimis cu succes! Vom reveni cât mai curând.");
+      this.reset();
+    });
+  }
+
+  loadEvents();
+});
