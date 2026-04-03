@@ -22,28 +22,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ];
 
-  const news = [
-    {
-      title: "Formula 1 sezon nou",
-      description: "Se anunță lupte intense în noul sezon.",
-      image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80",
-      url: "#"
-    },
-    {
-      title: "Rally european",
-      description: "Trasee spectaculoase și dueluri tari.",
-      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80",
-      url: "#"
-    }
-  ];
-
   if (!localStorage.getItem("defaultEventsLoaded")) {
     localStorage.setItem("customEvents", JSON.stringify(defaultEvents));
     localStorage.setItem("defaultEventsLoaded", "true");
   }
 
   const savedEvents = JSON.parse(localStorage.getItem("customEvents")) || [];
- async function loadRealNews() {
+
+  renderEvents(savedEvents);
+  renderNextEvent(savedEvents);
+  loadRealNews(); // 🔥 AICI era problema (nu era apelată)
+});
+
+
+// 🔥 FUNCȚIA DE ȘTIRI LIVE
+async function loadRealNews() {
   const newsContainer = document.getElementById("newsContainer");
   if (!newsContainer) return;
 
