@@ -205,81 +205,41 @@ async function loadNews() {
 }
 
 loadNews();
-async function loadNews() {
+function loadNews() {
   const newsContainer = document.getElementById("newsContainer");
 
-  try {
-    const response = await fetch(
-      "https://newsapi.org/v2/everything?q=formula%201 OR rally OR cars&language=en&sortBy=publishedAt&apiKey=YOUR_API_KEY"
-    );
-
-    const data = await response.json();
-
-    if (!data.articles || data.articles.length === 0) {
-      newsContainer.innerHTML = "<p>Nu sunt știri disponibile.</p>";
-      return;
+  const fakeNews = [
+    {
+      title: "Formula 1: Verstappen domină sezonul",
+      description: "Max Verstappen continuă să impresioneze în campionatul F1.",
+      image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c",
+      url: "#"
+    },
+    {
+      title: "Rally spectaculos în Finlanda",
+      description: "Etapă intensă de rally cu dueluri spectaculoase.",
+      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
+      url: "#"
     }
+  ];
 
-    newsContainer.innerHTML = "";
+  newsContainer.innerHTML = "";
 
-    data.articles.slice(0, 6).forEach(article => {
-      const card = document.createElement("div");
-      card.className = "event-card";
+  fakeNews.forEach(article => {
+    const card = document.createElement("div");
+    card.className = "event-card";
 
-      card.innerHTML = `
-        <img src="${article.urlToImage || 'https://via.placeholder.com/400'}">
-        <div class="event-content">
-          <h3>${article.title}</h3>
-          <p>${article.description || ""}</p>
-          <a href="${article.url}" target="_blank" class="btn">Citește</a>
-        </div>
-      `;
+    card.innerHTML = `
+      <img src="${article.image}">
+      <div class="event-content">
+        <h3>${article.title}</h3>
+        <p>${article.description}</p>
+        <a href="${article.url}" class="btn">Citește</a>
+      </div>
+    `;
 
-      newsContainer.appendChild(card);
-    });
-  } catch (error) {
-    console.error(error);
-    newsContainer.innerHTML = "<p>Eroare la încărcarea știrilor.</p>";
-  }
-}
-
-loadNews();
-async function loadNews() {
-  const newsContainer = document.getElementById("newsContainer");
-
-  try {
-    const response = await fetch(
-      "https://newsapi.org/v2/everything?q=formula%201 OR rally OR cars&language=en&sortBy=publishedAt&apiKey=YOUR_API_KEY"
-    );
-
-    const data = await response.json();
-
-    if (!data.articles || data.articles.length === 0) {
-      newsContainer.innerHTML = "<p>Nu sunt știri disponibile.</p>";
-      return;
-    }
-
-    newsContainer.innerHTML = "";
-
-    data.articles.slice(0, 6).forEach(article => {
-      const card = document.createElement("div");
-      card.className = "event-card";
-
-      card.innerHTML = `
-        <img src="${article.urlToImage || 'https://via.placeholder.com/400'}">
-        <div class="event-content">
-          <h3>${article.title}</h3>
-          <p>${article.description || ""}</p>
-          <a href="${article.url}" target="_blank" class="btn">Citește</a>
-        </div>
-      `;
-
-      newsContainer.appendChild(card);
-    });
-  } catch (error) {
-    console.error(error);
-    newsContainer.innerHTML = "<p>Eroare la încărcarea știrilor.</p>";
-  }
+    newsContainer.appendChild(card);
+  });
 }
 
 loadNews();
