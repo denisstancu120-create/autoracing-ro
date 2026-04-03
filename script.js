@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const savedEvents = JSON.parse(localStorage.getItem("customEvents")) || [];
+  renderNextEvent(savedEvents);
   renderEvents(savedEvents);
   renderNews(news);
 
@@ -108,6 +109,69 @@ function renderNews(newsItems) {
 
     newsContainer.appendChild(card);
   });
+}
+
+function renderNextEvent(events) {
+  const nextEventBox = document.getElementById("nextEventBox");
+  if (!nextEventBox) return;
+
+  const now = new Date();
+  const futureEvents = events
+    .filter(event => new Date(event.date) > now)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (!futureEvents.length) {
+    nextEventBox.innerHTML = "<p>Nu există evenimente viitoare.</p>";
+    return;
+  }
+
+  const nextEvent = futureEvents[0];
+
+  nextEventBox.innerHTML = `
+    <h3>${nextEvent.title}</h3>
+    <p><strong>Data:</strong> ${formatDate(nextEvent.date)}</p>
+    <p><strong>Oraș:</strong> ${nextEvent.city}</p>
+    <p><strong>Locație:</strong> ${nextEvent.location}</p>
+    <p>${nextEvent.description}</p>
+    <a class="btn" href="event.html?id=${encodeURIComponent(nextEvent.id)}">Detalii eveniment</a>
+  `;
+
+  startCountdown(nextEvent.date);
+}
+
+function startCountdown(targetDate) {
+  const daysEl = document.getElementById("days");
+  const hoursEl = document.getElementById("hours");
+  const minutesEl = document.getElementById("minutes");
+  const secondsEl = document.getElementById("seconds");
+
+  if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = new Date(targetDate).getTime() - now;
+
+    if (distance <= 0) {
+      daysEl.textContent = "00";
+      hoursEl.textContent = "00";
+      minutesEl.textContent = "00";
+      secondsEl.textContent = "00";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
+
+    daysEl.textContent = String(days).padStart(2, "0");
+    hoursEl.textContent = String(hours).padStart(2, "0");
+    minutesEl.textContent = String(minutes).padStart(2, "0");
+    secondsEl.textContent = String(seconds).padStart(2, "0");
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 }
 
 function formatDate(dateString) {
