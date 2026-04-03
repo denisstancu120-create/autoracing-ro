@@ -71,3 +71,4 @@ function renderNews(newsItems) {
     newsContainer.appendChild(card);
   });
 }
+console.log("NEWS:", news);
