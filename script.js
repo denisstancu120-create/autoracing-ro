@@ -143,10 +143,38 @@ async function loadRealNews() {
 
   try {
     const response = await fetch(
-      "https://api.allorigins.win/raw?url=" +
-      encodeURIComponent("https://www.motorsport.com/rss/f1/news/")
+      "https://api.rss2json.com/v1/api.json?rss_url=https://www.motorsport.com/rss/f1/news/"
     );
 
+    const data = await response.json();
+
+    newsContainer.innerHTML = "";
+
+    if (!data.items || !data.items.length) {
+      newsContainer.innerHTML = "<p>Nu s-au găsit știri.</p>";
+      return;
+    }
+
+    data.items.slice(0, 6).forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "event-card";
+
+      card.innerHTML = `
+        <img src="${item.thumbnail || 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c'}">
+        <div class="event-content">
+          <h3>${item.title}</h3>
+          <a href="${item.link}" target="_blank" class="btn">Citește</a>
+        </div>
+      `;
+
+      newsContainer.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error(error);
+    newsContainer.innerHTML = "<p>Nu s-au putut încărca știrile.</p>";
+  }
+}
     const text = await response.text();
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "text/xml");
