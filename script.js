@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderEvents(events);
   renderNews(news);
+  console.log("NEWS:", news);
 });
 
 function renderNews(newsItems) {
@@ -71,4 +72,4 @@ function renderNews(newsItems) {
     newsContainer.appendChild(card);
   });
 }
-console.log("NEWS:", news);
+
