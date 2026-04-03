@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Evenimente</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">AUTO<span>RACING</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Acasă</a></li>
+    </ul>
+  </nav>
+
+  <main class="section contact-section">
+    <h2>Adaugă Eveniment</h2>
+
+    <form id="adminForm" class="contact-form">
+      <input type="text" id="title" placeholder="Titlu eveniment" required />
+      <input type="datetime-local" id="date" required />
+      <input type="text" id="city" placeholder="Oraș" required />
+      <input type="text" id="location" placeholder="Locație" required />
+      <input type="text" id="mapLink" placeholder="Link Google Maps embed sau link simplu" required />
+      <input type="text" id="image" placeholder="Link imagine" required />
+      <textarea id="description" placeholder="Descriere eveniment" rows="5" required></textarea>
+      <button type="submit" class="btn">Salvează eveniment</button>
+    </form>
+
+    <h2 style="margin-top: 40px;">Evenimente adăugate</h2>
+    <div id="adminEventsList" class="events-grid"></div>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
