@@ -1,3 +1,4 @@
+alert("script nou incarcat");
 document.addEventListener("DOMContentLoaded", () => {
 
   const events = [
