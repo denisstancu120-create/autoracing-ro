@@ -248,3 +248,33 @@ body {
     font-size: 17px;
   }
 }
+.countdown-box {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.countdown div {
+  background: #171717;
+  border: 1px solid #2b2b2b;
+  padding: 18px 22px;
+  border-radius: 14px;
+  min-width: 100px;
+}
+
+.countdown span {
+  display: block;
+  font-size: 30px;
+  font-weight: bold;
+  color: #ff2e2e;
+}
+
+.countdown small {
+  color: #bbb;
+}
