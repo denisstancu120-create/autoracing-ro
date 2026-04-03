@@ -1,4 +1,4 @@
-async function loadNews() {
+async function //loadNews();
   const newsContainer = document.getElementById("newsContainer");
 
   // dacă nu există secțiunea, ieșim
