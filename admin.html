@@ -18,20 +18,17 @@
     <h2>Adaugă eveniment</h2>
 
     <form id="adminForm" class="contact-form">
-      <input type="text" id="title" placeholder="Titlu eveniment" required />
-      <input type="datetime-local" id="date" required />
-      <input type="text" id="city" placeholder="Oraș" required />
-      <input type="text" id="location" placeholder="Locație" required />
-      <input type="text" id="image" placeholder="Link imagine" required />
-      <input type="text" id="mapLink" placeholder="Link Google Maps embed" required />
-      <textarea id="description" placeholder="Descriere eveniment" rows="5" required></textarea>
-      <button type="submit" class="btn">Salvează eveniment</button>
-    </form>
+  <input type="hidden" id="editId" />
 
-    <h2 style="margin-top:40px;">Evenimente adăugate</h2>
-    <div id="adminEventsList" class="events-grid"></div>
-  </main>
+  <input type="text" id="title" placeholder="Titlu eveniment" required />
+  <input type="datetime-local" id="date" required />
+  <input type="text" id="city" placeholder="Oraș" required />
+  <input type="text" id="location" placeholder="Locație" required />
+  <input type="text" id="image" placeholder="Link imagine" required />
+  <input type="text" id="mapLink" placeholder="Link Google Maps embed" required />
+  <textarea id="description" placeholder="Descriere eveniment" rows="5" required></textarea>
 
-  <script src="admin.js"></script>
+  <button type="submit" class="btn" id="saveBtn">Salvează eveniment</button>
+</form>
 </body>
 </html>
