@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const adminForm = document.getElementById("adminForm");
   const adminEventsList = document.getElementById("adminEventsList");
+  const saveBtn = document.getElementById("saveBtn");
 
   function getEvents() {
     return JSON.parse(localStorage.getItem("customEvents")) || [];
@@ -8,6 +9,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function saveEvents(events) {
     localStorage.setItem("customEvents", JSON.stringify(events));
+  }
+
+  function clearForm() {
+    document.getElementById("editId").value = "";
+    document.getElementById("title").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("city").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("image").value = "";
+    document.getElementById("mapLink").value = "";
+    document.getElementById("description").value = "";
+    saveBtn.textContent = "Salvează eveniment";
+  }
+
+  function fillForm(event) {
+    document.getElementById("editId").value = event.id;
+    document.getElementById("title").value = event.title;
+    document.getElementById("date").value = event.date;
+    document.getElementById("city").value = event.city;
+    document.getElementById("location").value = event.location;
+    document.getElementById("image").value = event.image;
+    document.getElementById("mapLink").value = event.mapLink;
+    document.getElementById("description").value = event.description;
+    saveBtn.textContent = "Actualizează evenimentul";
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   }
 
   function renderAdminEvents() {
@@ -30,7 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Data:</strong> ${new Date(event.date).toLocaleString("ro-RO")}</p>
           <p><strong>Oraș:</strong> ${event.city}</p>
           <p><strong>Locație:</strong> ${event.location}</p>
-          <button class="btn delete-btn" data-id="${event.id}">Șterge</button>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+            <button class="btn edit-btn" data-id="${event.id}">Editează</button>
+            <button class="btn delete-btn" data-id="${event.id}">Șterge</button>
+          </div>
         </div>
       `;
 
@@ -43,6 +76,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const updatedEvents = getEvents().filter((event) => event.id !== id);
         saveEvents(updatedEvents);
         renderAdminEvents();
+
+        if (document.getElementById("editId").value === id) {
+          clearForm();
+        }
+      });
+    });
+
+    document.querySelectorAll(".edit-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-id");
+        const event = getEvents().find((e) => e.id === id);
+        if (event) {
+          fillForm(event);
+        }
       });
     });
   }
@@ -50,8 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
   adminForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const newEvent = {
-      id: "event-" + Date.now(),
+    const editId = document.getElementById("editId").value;
+
+    const eventData = {
+      id: editId || "event-" + Date.now(),
       title: document.getElementById("title").value,
       date: document.getElementById("date").value,
       city: document.getElementById("city").value,
@@ -62,11 +111,20 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const events = getEvents();
-    events.push(newEvent);
-    saveEvents(events);
 
-    alert("Eveniment salvat cu succes!");
-    adminForm.reset();
+    if (editId) {
+      const updatedEvents = events.map((event) =>
+        event.id === editId ? eventData : event
+      );
+      saveEvents(updatedEvents);
+      alert("Eveniment actualizat cu succes!");
+    } else {
+      events.push(eventData);
+      saveEvents(events);
+      alert("Eveniment salvat cu succes!");
+    }
+
+    clearForm();
     renderAdminEvents();
   });
 
