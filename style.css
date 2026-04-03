@@ -278,3 +278,10 @@ body {
 .countdown small {
   color: #bbb;
 }
+.edit-btn {
+  background: #ff7b00;
+}
+
+.edit-btn:hover {
+  background: #e56f00;
+}
