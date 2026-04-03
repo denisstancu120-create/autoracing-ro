@@ -45,33 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
   renderNews(news);
 });
 
-function renderEvents(events) {
-  const container = document.getElementById("eventsContainer");
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  events.forEach((event) => {
-    const card = document.createElement("div");
-    card.className = "event-card";
-
-    card.innerHTML = `
-      <img src="${event.image}" alt="${event.title}">
-      <div class="event-content">
-        <h3>${event.title}</h3>
-        <p>${event.description}</p>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
 function renderNews(newsItems) {
   const newsContainer = document.getElementById("newsContainer");
-  if (!newsContainer) return;
 
-  newsContainer.className = "events-grid";
+  if (!newsContainer) {
+    console.log("NU EXISTA newsContainer");
+    return;
+  }
+
   newsContainer.innerHTML = "";
 
   newsItems.forEach((item) => {
